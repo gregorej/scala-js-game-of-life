@@ -1,6 +1,6 @@
 package pl.gdyk.game.life.ui
 
-import org.scalajs.dom.HTMLElement
+import org.scalajs.dom
 
 
 trait Panel extends Widget {
@@ -9,18 +9,19 @@ trait Panel extends Widget {
     element.appendChild(child.element)
     child.parent= this
   }
-
 }
 
 object RootPanel {
-  def apply(id: String): Panel = {
-    val rootElement = org.scalajs.dom.document.getElementById(id)
-    new Panel {
-      def parent: Widget = null
 
-      def parent_=(parentWidget: Widget): Unit = {}
+  private def forElement(initElement: dom.HTMLElement) = new Panel {
+    override def parent: Widget = null
 
-      def element: HTMLElement = rootElement
-    }
+    override def parent_=(parentWidget: Widget): Unit = {}
+
+    def element: dom.HTMLElement = initElement
   }
+
+  def apply(id: String): Panel = forElement(dom.document.getElementById(id))
+
+  def apply(): Panel = forElement(dom.document.getElementsByTagName("body")(0).asInstanceOf[dom.HTMLElement])
 }
