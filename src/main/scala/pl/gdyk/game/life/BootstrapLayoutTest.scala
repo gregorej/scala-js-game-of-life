@@ -6,14 +6,13 @@ import pl.gdyk.game.life.ui.responsive.{ResponsiveGrid, ResponsiveGridCell, Resp
 
 @js.annotation.JSExport(name = "BootstrapLayoutTest")
 object BootstrapLayoutTest {
-  val canvas = new CanvasWidget(500, 500)
+  val canvas = new CanvasWidget(500 px, 500 px)
 
   @js.annotation.JSExport
   def main()  = {
-
     buildLayout()
     canvas.withContext{ ctx =>
-      ctx.fillColor =Color.GREEEN
+      ctx.fillColor = Color.GREEN
       ctx.fillRect(0, 0, 500, 500)
     }
 

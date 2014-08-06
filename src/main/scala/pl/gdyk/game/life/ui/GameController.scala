@@ -11,8 +11,8 @@ class GameController(boardFactory: BoardFactory, visualizer: SquareGrid, taskExe
   private var gameTask: Task = null
 
   private def color(cell: Cell): ui.Color = cell.state match {
-    case Live => "#000000"
-    case Dead => "#FFFFFF"
+    case Live => Color.BLACK
+    case Dead => Color.WHITE
   }
 
   private def updateVisualization(currentBoard: Board, newBoard: Board): Unit = {

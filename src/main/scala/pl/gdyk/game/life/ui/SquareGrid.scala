@@ -1,17 +1,16 @@
 package pl.gdyk.game.life.ui
 
-import org.scalajs.dom.{CanvasRenderingContext2D, HTMLCanvasElement, HTMLElement}
+import org.scalajs.dom.{CanvasRenderingContext2D, HTMLCanvasElement}
 import org.scalajs.dom
-
 
 trait SquareGrid extends UIObject {
   def updateColor(row: Int, column: Int, newColor: Color)
 }
 
-class CanvasWidget(initWidth: Option[Int], initHeight: Option[Int]) extends Widget {
+class CanvasWidget(initWidth: Option[Pixels], initHeight: Option[Pixels]) extends Widget {
 
   def this() = this(None, None)
-  def this(width: Int, height: Int) = this(Some(width), Some(height))
+  def this(width: Pixels, height: Pixels) = this(Some(width), Some(height))
 
   val element = dom.document.createElement("canvas").asInstanceOf[HTMLCanvasElement]
 
@@ -25,19 +24,23 @@ class CanvasWidget(initWidth: Option[Int], initHeight: Option[Int]) extends Widg
     element.height = initHeight.getOrElse(parentWidget.element.clientHeight)
   }
 
-  def withContext(function: (CanvasRenderingContext2D) => Unit): Unit = function(element.getContext("2d").asInstanceOf[CanvasRenderingContext2D])
+  def actualWidth: Pixels = element.width
+  def actualHeight: Pixels = element.height
+
+  def withContext(function: (CanvasRenderingContext2D) => Unit): Unit = function(element.context2d)
 }
 
 
 class CanvasSquareGrid(rows: Int, columns: Int) extends CanvasWidget with SquareGrid {
 
-  private val SQUARE_SIZE = 5
-  private val context = element.getContext("2d").asInstanceOf[CanvasRenderingContext2D]
+  private def squareWidth: Pixels = actualWidth / columns
+  private def squareHeight: Pixels = actualHeight / rows
 
   def updateColor(row: Int, column: Int, newColor: Color): Unit = {
+    dom.window.console.log("actual width = " + actualWidth)
     withContext {context =>
       context.fillStyle = newColor
-      context.fillRect(row * SQUARE_SIZE, column * SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE)
+      context.fillRect(column * squareWidth, row * squareHeight, squareWidth, squareHeight)
     }
   }
 }
